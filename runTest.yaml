@@ -1,0 +1,4 @@
+appId: com.findit.id
+---
+- launchApp
+- runFlow: "src/test/tests/LoginWithEmail.yaml"

@@ -1,0 +1,62 @@
+contents:
+
+# LoginWithEmail.yaml
+
+appId: com.findit.id
+---
+#- runScript: src/main/pages/LoginWIthEmail.js
+- launchApp:
+      appId: "com.findit.id"
+      clearState: true
+      label: open findit app
+
+
+# Email-related actions
+- tapOn:
+        text: "Continue with Email|Lanjutkan dengan Email"
+- tapOn: user@example.com
+- inputText:
+      label: user's email input
+      text: ashfaq.ahmed@findit.id
+#- tapOn: Enter
+- tapOn:
+        text: "Next|Lanjutkan"
+# OTP input (6 separate inputs for the OTP, fixed order)
+- inputText:
+      label: user's otp input
+      text: "7"
+- inputText:
+      label: user's otp input
+      text: "2"
+- inputText:
+      label: user's otp input
+      text: "7"
+- inputText:
+      label: user's otp input
+      text: "2"
+- inputText:
+      label: user's otp input
+      text: "7"
+- inputText:
+      label: user's otp input
+      text: "2"
+
+# Post-OTP actions
+- tapOn:
+        text: "Verify|Verifikasi"
+- tapOn:
+        text: "Turn on notifications|Nyalakan notifikasi"
+#- assertVisible:
+#      id: com.android.systemui:id/ends_group
+
+
+
+
+
+
+
+
+
+
+
+

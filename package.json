@@ -1,0 +1,18 @@
+{
+  "name": "findit-app-automation",
+  "version": "1.0.0",
+  "description": "Maestro is built on learnings from its predecessors (Appium, Espresso, UIAutomator, XCTest, Selenium, Playwright) and allows you to easily define and test your Flows",
+  "main": "index.js",
+  "scripts": {
+    "install meastro": "brew tap mobile-dev-inc/tap  \n  brew install maestro",
+    "maestro studio": "maestro studio",
+    "Connecting to Your Device": "maestro test",
+    "login with email": "maestro test src/test/tests/LoginWithEmail.yaml",
+    "Run Test": "maestro test runTest.yaml",
+    "Record test": "maestro record --local runTest.yaml"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/shikder-klikit/QA-Automation-NMA-by.Meastro.git"
+  }
+}
