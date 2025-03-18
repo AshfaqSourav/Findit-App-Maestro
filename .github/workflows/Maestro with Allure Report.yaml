@@ -1,0 +1,131 @@
+name: Maestro with Allure Report
+
+on:
+  workflow_dispatch:
+
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin' # Specify the Java distribution
+          java-version: '21'      # Specify the Java version
+
+      - name: Verify Java Version
+        run: java -version
+
+      - name: Setup NodeJS
+        uses: actions/setup-node@v4
+        with:
+         node-version: '20'
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          export PATH="$PATH:$HOME/.maestro/bin"
+
+      - name: Enable KVM
+        run: |
+          echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
+          sudo udevadm control --reload-rules
+          sudo udevadm trigger --name-match=kvm
+
+      - name: Ensure Target Directory Exists
+        run: |
+          mkdir -p /home/runner/work/Findit-App/
+          cp src/test/Apps/V1.2.2.apk /home/runner/work/Findit-App/V1.2.2.apk
+          uname -m
+
+      - name: Verify APK Existence
+        run: |
+          if [ -f src/test/Apps/V1.2.2.apk ]; then
+          echo "✅ APK found!"
+          file src/test/Apps/V1.2.2.apk  # Check if it's a valid APK
+          ls -lh src/test/Apps/V1.2.2.apk
+          else
+          echo "❌ APK NOT FOUND!"
+          exit 1
+          fi
+
+      - name: Debug APK Path and Permissions
+        run: |
+         ls -lah /home/runner/work/Findit-App/V1.2.2.apk
+         file /home/runner/work/Findit-App/V1.2.2.apk
+        # ✅ Cache Android SDK (Prevents re-downloading SDK)
+      - name: Cache Android SDK
+        id: cache-android-sdk
+        uses: actions/cache@v3
+        with:
+            path: ~/.android
+            key: android-sdk-${{ runner.os }}-${{ hashFiles('**/build.gradle') }}
+            restore-keys: android-sdk-${{ runner.os }}-
+
+        # ✅ Cache Android Virtual Device (AVD)
+      - name: Cache AVD (Android Virtual Device)
+        id: cache-avd
+        uses: actions/cache@v3
+        with:
+            path: ~/.android/avd
+            key: avd-${{ runner.os }}-${{ hashFiles('**/build.gradle') }}
+            restore-keys: avd-${{ runner.os }}-
+
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Accept Android SDK Licenses
+        run: yes | sdkmanager --licenses
+
+      - name: Install Required Android Packages
+        run: |
+            sdkmanager "platform-tools" "platforms;android-30" "system-images;android-30;google_apis;x86_64" "emulator"
+
+      - name: Create and Start Emulator
+        run: |
+            echo "🛠 Creating AVD for Pixel 6 API 30..."
+            export ANDROID_AVD_HOME=$HOME/.android/avd  # ✅ Force correct AVD path
+
+            AVD_NAME="Pixel_6_API_30"
+
+
+            # Check if AVD already exists
+            if [ ! -d "$HOME/.android/avd/$AVD_NAME.avd" ]; then
+            echo "⚡ AVD not found, creating new one..."
+            mkdir -p $ANDROID_AVD_HOME
+            echo "no" | avdmanager create avd -n $AVD_NAME -k "system-images;android-30;google_apis;x86_64" --device "pixel_6"
+            else
+            echo "✅ AVD already exists, skipping creation."
+            fi
+
+            echo "📋 Available AVDs:"
+            avdmanager list avd
+
+            echo "🚀 Starting Emulator..."
+            export ANDROID_EMULATOR_HOME=$HOME/.android
+            nohup $ANDROID_HOME/emulator/emulator -avd Pixel_6_API_30 -no-window -gpu swiftshader_indirect -no-snapshot -noaudio -no-boot-anim &
+            sleep 60  # Wait for emulator to boot
+
+
+            echo "🔄 Verifying Emulator Status..."
+            adb wait-for-device
+            adb shell getprop sys.boot_completed | grep -m 1 '1'
+
+            echo "📏 Disabling Animations"
+            adb shell settings put global window_animation_scale 0
+            adb shell settings put global transition_animation_scale 0
+            adb shell settings put global animator_duration_scale 0
+
+      - name: Run Maestro tests
+        run: |
+            maestro test runTest.yaml --format junit --output ./maestro-results/results.xml
+
+      - name: Generate Allure report
+        run: |
+          npm install -g allure-commandline
+          allure serve ./maestro-results
