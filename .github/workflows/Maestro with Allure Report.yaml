@@ -45,7 +45,7 @@ jobs:
           if [ -f src/test/Apps/V1.2.2.apk ]; then
           echo "✅ APK found!"
           file src/test/Apps/V1.2.2.apk  # Check if it's a valid APK
-          ls -lh src/test/resources/apps/V1.2.2.apk
+          ls -lh src/test/Apps/V1.2.2.apk
           else
           echo "❌ APK NOT FOUND!"
           exit 1
