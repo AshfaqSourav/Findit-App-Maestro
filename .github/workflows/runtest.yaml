@@ -1,0 +1,49 @@
+name: Maestro with Emulator and Allure Report
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
+
+      - name: Install Android SDK
+        uses: android-actions/setup-android@v2
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+
+      - name: Create and start Android emulator
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30          # Android API level (e.g., 30 for Android 11)
+          arch: x86_64          # Emulator architecture
+          profile: Nexus 6       # Emulator device profile
+          force-avd-creation: true
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -camera-back none
+          disable-animations: true
+          script: ''
+
+      - name: Install app on emulator
+        run: |
+          adb install src/test/Apps/V1.2.2.apk  # Replace with the path to your APK file
+
+      - name: Run Maestro tests
+        run: |
+          maestro test runTest.yaml --format junit --output ./maestro-results/results.xml
+
+      - name: Generate Allure report
+        run: |
+          npm install -g allure-commandline
+          allure serve ./maestro-results
