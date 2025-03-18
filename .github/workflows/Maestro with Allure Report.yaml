@@ -37,7 +37,7 @@ jobs:
       - name: Ensure Target Directory Exists
         run: |
           mkdir -p /home/runner/work/Findit-App/
-          cp src/test/resources/apps/V1.2.2.apk /home/runner/work/Findit-App/V1.2.2.apk
+          cp src/test/Apps/V1.2.2.apk /home/runner/work/Findit-App/V1.2.2.apk
           uname -m
 
       - name: Verify APK Existence
