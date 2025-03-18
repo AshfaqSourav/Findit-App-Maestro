@@ -9,6 +9,7 @@
     "Connecting to Your Device": "maestro test",
     "login with email": "maestro test src/test/tests/LoginWithEmail.yaml",
     "Run Test": "maestro test runTest.yaml",
+    "install allure": "npm install -g allure-commandline",
     "Record test": "maestro record --local runTest.yaml",
     "Report generate": "maestro test runTest.yaml --format junit --output ./maestro-results/results.xml",
     "Show Report": "allure serve ./maestro-results"
