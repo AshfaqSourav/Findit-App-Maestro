@@ -1,6 +1,8 @@
 name: Maestro with Allure Report
 
-on: [push]
+on:
+  workflow_dispatch:
+
 
 jobs:
   test:
