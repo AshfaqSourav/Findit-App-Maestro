@@ -31,11 +31,13 @@ jobs:
           arch: x86_64          # Emulator architecture
           profile: Nexus 6       # Emulator device profile
           force-avd-creation: true
-          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -camera-back none
+          emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -camera-back none -accel on
           disable-animations: true
-          script: |             # Add this script input
+          emulator-boot-timeout: 1200  # Increase boot timeout to 1200 seconds (20 minutes)
+          script: |
             echo "Emulator is running!"
             adb devices         # Verify the emulator is connected
+            adb logcat         # View emulator logs for debugging
 
       - name: Install app on emulator
         run: |
