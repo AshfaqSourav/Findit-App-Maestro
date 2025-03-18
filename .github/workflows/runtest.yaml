@@ -19,11 +19,6 @@ jobs:
       - name: Install Android SDK
         uses: android-actions/setup-android@v2
 
-      - name: Install Maestro
-        run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
-
       - name: Create and start Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
@@ -38,6 +33,11 @@ jobs:
       - name: Install app on emulator
         run: |
           adb install src/test/Apps/V1.2.2.apk  # Replace with the path to your APK file
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Run Maestro tests
         run: |
