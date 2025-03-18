@@ -22,7 +22,7 @@ jobs:
 
       - name: Run Maestro tests
         run: |
-          maestro test flows/ --format junit --output ./maestro-results/results.xml
+          maestro test runTest.yaml --format junit --output ./maestro-results/results.xml
 
       - name: Generate Allure report
         run: |
