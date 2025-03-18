@@ -27,9 +27,11 @@ jobs:
       - name: Create and start Android emulator
         uses: reactivecircus/android-emulator-runner@v2
         with:
-          api-level: 30          # Android API level (e.g., 30 for Android 11)
+          api-level: 29          # Android API level (e.g., 30 for Android 11)
           arch: x86_64          # Emulator architecture
           profile: Nexus 6       # Emulator device profile
+          cores: 2
+          ram-size: 2048M
           force-avd-creation: true
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -camera-back none -accel on
           disable-animations: true
@@ -41,7 +43,7 @@ jobs:
 
       - name: Install app on emulator
         run: |
-          adb install path/to/your/app.apk  # Replace with the path to your APK file
+          adb install src/test/Apps/V1.2.2.apk  # Replace with the path to your APK file
 
       - name: Run Maestro tests
         run: |
