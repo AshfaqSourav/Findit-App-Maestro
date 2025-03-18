@@ -10,14 +10,19 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Set up Java
+      - name: Set up Java (Java 17)
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '11'
+          java-version: '17'  # Use Java 17 or higher
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v2
+
+      - name: Install Maestro
+        run: |
+          curl -Ls "https://get.maestro.mobile.dev" | bash
+          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
       - name: Create and start Android emulator
         uses: reactivecircus/android-emulator-runner@v2
@@ -32,12 +37,7 @@ jobs:
 
       - name: Install app on emulator
         run: |
-          adb install src/test/Apps/V1.2.2.apk  # Replace with the path to your APK file
-
-      - name: Install Maestro
-        run: |
-          curl -Ls "https://get.maestro.mobile.dev" | bash
-          echo "$HOME/.maestro/bin" >> $GITHUB_PATH
+          adb install path/to/your/app.apk  # Replace with the path to your APK file
 
       - name: Run Maestro tests
         run: |
