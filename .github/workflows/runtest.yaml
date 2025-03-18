@@ -5,7 +5,7 @@ on:
 
 jobs:
   test:
-    runs-on: ubuntu-latest
+    runs-on: macos-latest  # Use macOS for hardware acceleration
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -14,7 +14,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'  # Use Java 17 or higher
+          java-version: '17'
 
       - name: Install Android SDK
         uses: android-actions/setup-android@v2
@@ -33,7 +33,9 @@ jobs:
           force-avd-creation: true
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -camera-back none
           disable-animations: true
-          script: ''
+          script: |             # Add this script input
+            echo "Emulator is running!"
+            adb devices         # Verify the emulator is connected
 
       - name: Install app on emulator
         run: |
