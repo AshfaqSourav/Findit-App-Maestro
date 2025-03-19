@@ -35,7 +35,7 @@ jobs:
           force-avd-creation: true
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -camera-back none -accel on
           disable-animations: true
-          emulator-boot-timeout: 1200  # Increase boot timeout to 1200 seconds (20 minutes)
+          emulator-boot-timeout: 1800  # Increase boot timeout to 1800 seconds (30 minutes)
           script: |
             echo "Emulator is running!"
             adb devices         # Verify the emulator is connected
