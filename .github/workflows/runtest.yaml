@@ -24,8 +24,8 @@ jobs:
           curl -Ls "https://get.maestro.mobile.dev" | bash
           echo "$HOME/.maestro/bin" >> $GITHUB_PATH
 
-      - name: Create and start Android emulator
-        uses: reactivecircus/android-emulator-runner@v2
+      - name: Android Emulator Runner
+        uses: ReactiveCircus/android-emulator-runner@v2.33.0
         with:
           api-level: 29          # Android API level (e.g., 30 for Android 11)
           arch: x86_64          # Emulator architecture
