@@ -131,5 +131,11 @@ jobs:
 
       - name: Generate Allure report
         run: |
-          npm install -g allure-commandline
-          allure serve ./maestro-results
+            npm install -g allure-commandline
+            allure generate ./maestro-results -o ./allure-report
+
+      - name: Upload Allure report as artifact
+        uses: actions/upload-artifact@v3
+        with:
+         name: allure-report
+         path: ./allure-report
