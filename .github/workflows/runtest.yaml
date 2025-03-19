@@ -27,11 +27,11 @@ jobs:
       - name: Android Emulator Runner
         uses: ReactiveCircus/android-emulator-runner@v2.33.0
         with:
-          api-level: 29          # Android API level (e.g., 30 for Android 11)
+          api-level: 29          # Android API level (e.g., 29 for Android 10)
           arch: x86_64          # Emulator architecture
           profile: Nexus 6       # Emulator device profile
-          cores: 2
-          ram-size: 2048M
+          cores: 2               # Number of CPU cores
+          ram-size: 4096M        # Increased RAM size
           force-avd-creation: true
           emulator-options: -no-window -no-audio -no-boot-anim -no-snapshot -camera-back none -accel on
           disable-animations: true
